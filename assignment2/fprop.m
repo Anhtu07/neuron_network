@@ -33,13 +33,14 @@ function [embedding_layer_state, hidden_layer_state, output_layer_state] = ...
 %   output_layer_state: State of units in the output layer as a matrix of size
 %     vocab_size X batchsize
 %
-batchsize
-[numwords, ] = size(input_batch);
+
+[numwords, batchsize] = size(input_batch);
 [vocab_size, numhid1] = size(word_embedding_weights);
 numhid2 = size(embed_to_hid_weights, 2);
 
 %% COMPUTE STATE OF WORD EMBEDDING LAYER.
 % Look up the inputs word indices in the word_embedding_weights matrix.
+
 embedding_layer_state = reshape(...
   word_embedding_weights(reshape(input_batch, 1, []),:)',...
   numhid1 * numwords, []);
@@ -51,22 +52,16 @@ inputs_to_hidden_units = embed_to_hid_weights' * embedding_layer_state + ...
 
 % Apply logistic activation function.
 % FILL IN CODE. Replace the line below by one of the options.
-hidden_layer_state = zeros(numhid2, batchsize);
-% Options
-% (a) hidden_layer_state = 1 ./ (1 + exp(inputs_to_hidden_units));
-% (b) hidden_layer_state = 1 ./ (1 - exp(-inputs_to_hidden_units));
-% (c) hidden_layer_state = 1 ./ (1 + exp(-inputs_to_hidden_units));
-% (d) hidden_layer_state = -1 ./ (1 + exp(-inputs_to_hidden_units));
+hidden_layer_state = zeros(numhid2, batchsize); % Create a zero matrix size 200 x 100
+
+hidden_layer_state = 1 ./ (1 + exp(-inputs_to_hidden_units));
 
 %% COMPUTE STATE OF OUTPUT LAYER.
 % Compute inputs to softmax.
 % FILL IN CODE. Replace the line below by one of the options.
-inputs_to_softmax = zeros(vocab_size, batchsize);
-% Options
-% (a) inputs_to_softmax = hid_to_output_weights' * hidden_layer_state +  repmat(output_bias, 1, batchsize);
-% (b) inputs_to_softmax = hid_to_output_weights' * hidden_layer_state +  repmat(output_bias, batchsize, 1);
-% (c) inputs_to_softmax = hidden_layer_state * hid_to_output_weights' +  repmat(output_bias, 1, batchsize);
-% (d) inputs_to_softmax = hid_to_output_weights * hidden_layer_state +  repmat(output_bias, batchsize, 1);
+inputs_to_softmax = zeros(vocab_size, batchsize); %250x100
+
+inputs_to_softmax = hid_to_output_weights' * hidden_layer_state +  repmat(output_bias, 1, batchsize);
 
 % Subtract maximum. 
 % Remember that adding or subtracting the same constant from each input to a
