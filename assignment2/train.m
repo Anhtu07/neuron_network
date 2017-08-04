@@ -114,7 +114,7 @@ for epoch = 1:epochs
 
     % FILL IN CODE. Replace the line below by one of the options.
     back_propagated_deriv_2 = zeros(numhid2, batchsize);
-    % (a) back_propagated_deriv_2 = embed_to_hid_weights * back_propagated_deriv_1;
+    back_propagated_deriv_2 = embed_to_hid_weights * back_propagated_deriv_1;
     % (b) back_propagated_deriv_2 = back_propagated_deriv_1 * embed_to_hid_weights;
     % (c) back_propagated_deriv_2 = back_propagated_deriv_1' * embed_to_hid_weights;
     % (d) back_propagated_deriv_2 = back_propagated_deriv_1 * embed_to_hid_weights';
