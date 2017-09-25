@@ -151,11 +151,15 @@ function ret = d_loss_by_d_model(model, data, wd_coefficient)
   log_class_prob = class_input - repmat(class_normalizer, [size(class_input, 1), 1]);
   class_prob = exp(log_class_prob);
   
-  %backward
-  derivative1 = class_prob - data.targets;
-  ret.hid_to_class = model.hid_to_class * wd_coeffecient + deravative1*hid_output';
+  s = size(data.inputs, 2);
   
-  ret.input_to_hid = model.input_to_hid * 0;
+  %backward
+  derivative1 = (class_prob - data.targets)/s;
+  ret.hid_to_class = model.hid_to_class * wd_coefficient + derivative1*hid_output';
+  
+  derivative2 = model.hid_to_class' * derivative1;
+  derivative3 = derivative2 .* hid_output .* ( 1 - hid_output);
+  ret.input_to_hid = derivative3 * data.inputs' + model.input_to_hid * wd_coefficient;
 end
 
 function ret = model_to_theta(model)
